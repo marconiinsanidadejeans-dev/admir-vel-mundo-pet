@@ -6,12 +6,23 @@
     <title>Meu Admirável Mundo Pet</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #f0f4f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { width: 100%; max-width: 480px; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: #2c3e50; color: white; padding: 24px; text-align: center; }
-        .header h1 { font-size: 1.5rem; margin-bottom: 6px; }
-        .header p { font-size: 0.9rem; opacity: 0.8; }
-        .pet-card { padding: 24px; text-align: center; }
+        body { background: #f0f4f8; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        /* Navegação */
+        nav { width: 100%; max-width: 480px; display: flex; justify-content: space-around; background: #2c3e50; border-radius: 12px 12px 0 0; padding: 12px 0; }
+        nav button { background: none; border: none; color: #ecf0f1; font-weight: bold; font-size: 0.9rem; cursor: pointer; padding: 8px 12px; border-radius: 6px; transition: background 0.2s; }
+        nav button:hover, nav button.active { background: #34495e; color: #3498db; }
+
+        /* Container Principal */
+        .container { width: 100%; max-width: 480px; background: #ffffff; border-radius: 0 0 16px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-top: 1px solid #34495e; }
+        .header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+        .header p { font-size: 0.85rem; opacity: 0.8; }
+        
+        .tab-content { display: none; padding: 24px; text-align: center; }
+        .tab-content.active { display: block; }
+
+        /* Estilos do Prontuário */
         .pet-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #3498db; margin: 0 auto 16px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
         .pet-name { font-size: 1.8rem; color: #2c3e50; margin-bottom: 4px; }
         .pet-breed { font-size: 1rem; color: #7f8c8d; margin-bottom: 16px; }
@@ -21,40 +32,100 @@
         .info-section p { font-size: 0.95rem; color: #2d3748; margin-bottom: 6px; }
         .btn-emergency { display: block; width: 100%; background: #27ae60; color: white; text-align: center; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; margin-top: 20px; transition: background 0.2s; }
         .btn-emergency:hover { background: #219653; }
+
+        /* Estilos do Formulário */
+        .form-group { text-align: left; margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: bold; color: #2c3e50; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
+        .btn-submit { width: 100%; background: #3498db; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+        .btn-submit:hover { background: #2980b9; }
+
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: #a0aec0; background: #f8fafc; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
 <body translate="no">
 
+    <nav>
+        <button id="btn-home" onclick="switchTab('home')" class="active">Início</button>
+        <button id="btn-card" onclick="switchTab('card')">Ficha do Pet</button>
+        <button id="btn-register" onclick="switchTab('register')">+ Registar Pet</button>
+    </nav>
+
     <div class="container">
         <div class="header">
             <h1>🐾 Meu Admirável Mundo Pet</h1>
-            <p>Chaveiro Inteligente de Identificação</p>
+            <p>Chaveiros Inteligentes de Identificação em DTF UV</p>
         </div>
 
-        <div class="pet-card">
+        <!-- ABA 1: HOME -->
+        <div id="tab-home" class="tab-content active">
+            <h2 style="color: #2c3e50; margin-bottom: 12px;">Proteção Inteligente para o seu Pet</h2>
+            <p style="color: #4a5568; line-height: 1.5; margin-bottom: 20px;">
+                Os nossos chaveiros são impressos com tecnologia de alta durabilidade <strong>DTF UV</strong> e integram um QR Code dinâmico que liga quem encontrar o seu animal diretamente ao tutor via WhatsApp.
+            </p>
+            <button class="btn-submit" onclick="switchTab('card')">Ver Prontuário de Exemplo (Thor)</button>
+        </div>
+
+        <!-- ABA 2: FICHA DO PET (THOR) -->
+        <div id="tab-card" class="tab-content">
             <div class="pet-photo">🐶</div>
             
-            <h2 class="pet-name">Thor</h2>
-            <p class="pet-breed">Golden Retriever • Macho</p>
+            <h2 class="pet-name" id="display-name">Thor</h2>
+            <p class="pet-breed" id="display-breed">Golden Retriever • Macho</p>
             
             <div class="badge">⚠️ ATENÇÃO: PET PERDIDO / PRECISA DE AJUDA</div>
 
             <div class="info-section">
                 <h3>Informações do Tutor</h3>
-                <p><strong>Tutor:</strong> Marconi</p>
-                <p><strong>Cidade:</strong> Nova Friburgo - RJ</p>
+                <p><strong>Tutor:</strong> <span id="display-tutor">Marconi</span></p>
+                <p><strong>Cidade:</strong> <span id="display-city">Nova Friburgo - RJ</span></p>
             </div>
 
             <div class="info-section">
                 <h3>Cuidados Especiais & Saúde</h3>
-                <p><strong>Alergias:</strong> Alérgico a frango</p>
-                <p><strong>Medicamentos:</strong> Uso contínuo de protetor articular</p>
+                <p><strong>Alergias:</strong> <span id="display-allergies">Alérgico a frango</span></p>
+                <p><strong>Medicamentos:</strong> <span id="display-meds">Uso contínuo de protetor articular</span></p>
             </div>
 
-            <a href="https://wa.me/5522999999999?text=Olá!%20Encontrei%20o%20Thor%20através%20do%20chaveiro%20com%20QR%20Code." class="btn-emergency">
+            <a id="display-whatsapp" href="https://wa.me/5522999999999?text=Olá!%20Encontrei%20o%20Thor%20através%20do%20chaveiro%20com%20QR%20Code." class="btn-emergency">
                 📞 Falar com o Tutor via WhatsApp
             </a>
+        </div>
+
+        <!-- ABA 3: REGISTO DE NOVO PET -->
+        <div id="tab-register" class="tab-content">
+            <h2 style="color: #2c3e50; margin-bottom: 16px;">Registar Novo Animal</h2>
+            <form id="petForm" onsubmit="savePet(event)">
+                <div class="form-group">
+                    <label>Nome do Pet</label>
+                    <input type="text" id="input-name" required placeholder="Ex: Bob">
+                </div>
+                <div class="form-group">
+                    <label>Raça e Género</label>
+                    <input type="text" id="input-breed" required placeholder="Ex: Poodle • Macho">
+                </div>
+                <div class="form-group">
+                    <label>Nome do Tutor</label>
+                    <input type="text" id="input-tutor" required placeholder="Ex: Marconi">
+                </div>
+                <div class="form-group">
+                    <label>Cidade / UF</label>
+                    <input type="text" id="input-city" required placeholder="Ex: Nova Friburgo - RJ">
+                </div>
+                <div class="form-group">
+                    <label>Telemóvel (WhatsApp com DDD)</label>
+                    <input type="text" id="input-phone" required placeholder="Ex: 22999999999">
+                </div>
+                <div class="form-group">
+                    <label>Alergias / Restrições</label>
+                    <input type="text" id="input-allergies" placeholder="Ex: Nenhuma ou Alergia a picada">
+                </div>
+                <div class="form-group">
+                    <label>Medicamentos / Observações</label>
+                    <textarea id="input-meds" rows="2" placeholder="Ex: Toma medicação x às 8h"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Atualizar Ficha do Pet</button>
+            </form>
         </div>
 
         <div class="footer">
@@ -62,5 +133,39 @@
         </div>
     </div>
 
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        function savePet(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('input-name').value;
+            const breed = document.getElementById('input-breed').value;
+            const tutor = document.getElementById('input-tutor').value;
+            const city = document.getElementById('input-city').value;
+            const phone = document.getElementById('input-phone').value;
+            const allergies = document.getElementById('input-allergies').value || 'Nenhuma informada';
+            const meds = document.getElementById('input-meds').value || 'Nenhum informado';
+
+            document.getElementById('display-name').textContent = name;
+            document.getElementById('display-breed').textContent = breed;
+            document.getElementById('display-tutor').textContent = tutor;
+            document.getElementById('display-city').textContent = city;
+            document.getElementById('display-allergies').textContent = allergies;
+            document.getElementById('display-meds').textContent = meds;
+            
+            const cleanPhone = phone.replace(/\D/g, '');
+            document.getElementById('display-whatsapp').href = `https://wa.me/55${cleanPhone}?text=Olá!%20Encontrei%20o%20${encodeURIComponent(name)}%20através%20do%20chaveiro%20com%20QR%20Code.`;
+
+            alert('Ficha do pet atualizada com sucesso!');
+            switchTab('card');
+        }
+    </script>
 </body>
 </html>
