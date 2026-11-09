@@ -1,192 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admirável Mundo Pet - Nova Friburgo</title>
-  <style>
-    :root {
-      --primary: #2e7d32;
-      --primary-hover: #1b5e20;
-      --danger: #d32f2f;
-      --bg: #f4f6f8;
-      --card-bg: #ffffff;
-      --text: #333333;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 120px; }
-    
-    header { background: var(--primary); color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
-    
-    .container { max-width: 600px; margin: 0 auto; padding: 15px; }
-    
-    .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; text-decoration: none; display: inline-block; }
-    .btn-danger { background: var(--danger); }
-    
-    .card { background: var(--card-bg); border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-    
-    .hidden { display: none; }
-    
-    /* PREVIEW DA FOTO DO PET */
-    .pet-photo-preview {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--primary);
-      display: block;
-      margin: 10px auto;
-      background: #eee;
-    }
-
-    /* CARROSSEL NO RODAPÉ PARA PATROCINADORES */
-    .sponsor-carousel-container {
-      position: fixed;
-      bottom: 55px;
-      left: 0;
-      right: 0;
-      background: #e8f5e9;
-      border-top: 1px solid #c8e6c9;
-      padding: 8px 15px;
-      z-index: 99;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
-    }
-    .sponsor-title { font-size: 0.7rem; color: #2e7d32; font-weight: bold; text-transform: uppercase; white-space: nowrap; margin-right: 10px; }
-    .sponsor-slide { font-size: 0.85rem; font-weight: bold; color: #1b5e20; text-decoration: none; white-space: nowrap; transition: opacity 0.5s ease-in-out; }
-
-    /* NAVEGAÇÃO FIXA */
-    .nav-tabs { display: flex; justify-content: space-around; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; padding: 10px 0; z-index: 100; }
-    .tab-btn { border: none; background: none; font-size: 0.8rem; color: #666; cursor: pointer; text-align: center; width: 25%; }
-    .tab-btn.active { color: var(--primary); font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCode - Resgate Seguro</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #2c3e50; margin-bottom: 10px; }
+        p { color: #7f8c8d; font-size: 14px; margin-bottom: 25px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0 16px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { background-color: #27ae60; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background-color: #219653; }
+        .hidden { display: none; }
+        .pet-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #27ae60; }
+    </style>
 </head>
 <body>
 
-  <header>🐾 Admirável Mundo Pet</header>
+    <div class="container">
+        <div id="loading">A carregar PetCode...</div>
 
-  <div class="container">
-    <div class="quick-actions">
-      <button class="btn btn-danger" onclick="showTab('tab-mural')">🚨 Vi um Pet na Rua</button>
-      <button class="btn" onclick="showTab('tab-cadastrar-pet')">🐾 Ativar / Cadastrar Pet</button>
+        <!-- TELA 1: CADASTRO INICIAL (PRIMEIRO USO) -->
+        <div id="register-screen" class="hidden">
+            <h2>Ativar Novo PetCode</h2>
+            <p>Esta fivela ainda não tem dono. Cadastre o seu amiguinho!</p>
+            <form id="form-register">
+                <input type="text" id="pet-name" placeholder="Nome do Pet (Ex: Thor)" required>
+                <input type="text" id="owner-name" placeholder="O seu Nome (Tutor)" required>
+                <input type="text" id="owner-phone" placeholder="O seu WhatsApp (Ex: 22 99999-9999)" required>
+                <textarea id="pet-notes" placeholder="Cuidados especiais, endereço ou observações"></textarea>
+                <button type="submit">Salvar e Ativar PetCode</button>
+            </form>
+        </div>
+
+        <!-- TELA 2: PERFIL DO PET ( QUANDO ALGUÉM ENCONTRA NA RUA ) -->
+        <div id="profile-screen" class="hidden">
+            <img id="display-photo" class="pet-photo" src="https://via.placeholder.com/120" alt="Foto do Pet">
+            <h2 id="display-name">Nome do Pet</h2>
+            <p id="display-status" style="color: #e74c3c; font-weight: bold;">Perdido / Encontrado na Rua</p>
+            
+            <div style="background: #eef2f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                <p style="margin: 0 0 10px 0; font-weight: bold; color: #2c3e50;">Enviar Recado Seguro ao Tutor:</p>
+                <textarea id="msg-finder" placeholder="Escreva onde encontrou o pet ou como ele está..."></textarea>
+                <button onclick="sendSecureMessage()">Enviar Alerta ao Tutor</button>
+            </div>
+        </div>
     </div>
 
-    <!-- ABA CADASTRO COM PIN, TAMANHO E FOTO EDITÁVEL -->
-    <div id="tab-cadastrar-pet" class="tab-content hidden">
-      <h2>🔑 Ativar Fivela Inteligente</h2>
-      <div class="card">
-        <div class="form-group">
-          <label>Código PIN da Fivela (No Passador):</label>
-          <input type="text" id="pet-pin" placeholder="Ex: PIN-8391" style="font-weight: bold; letter-spacing: 1px;">
-        </div>
-        <div class="form-group">
-          <label>Nome do Pet:</label>
-          <input type="text" id="pet-nome" placeholder="Ex: Thor">
-        </div>
-        <div class="form-group">
-          <label>Tamanho da Fivela:</label>
-          <select id="pet-tamanho">
-            <option value="30mm">Médio (30 mm) - Cães pequenos e médios</option>
-            <option value="45mm">Grande (45 mm) - Cães de grande porte</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Foto do Perfil do Pet:</label>
-          <input type="file" id="pet-foto-input" accept="image/*" onchange="carregarFoto(event)">
-          <img id="pet-foto-preview" class="pet-photo-preview hidden" alt="Pré-visualização da foto do pet">
-        </div>
-        <div class="form-group">
-          <label>Seu WhatsApp (Com DDD):</label>
-          <input type="tel" id="pet-whatsapp" placeholder="Ex: 22999999999">
-        </div>
-        <button class="btn" onclick="salvarPet()">Vincular Fivela ao Pet</button>
-      </div>
-    </div>
+    <!-- Firebase SDK (Versão 9 Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    <!-- MURAL PADRÃO -->
-    <div id="tab-mural" class="tab-content">
-      <h2>📢 Mural Comunitário & Alertas</h2>
-      <div class="card">
-        <h3>📍 Alerta Recente em Duas Pedras</h3>
-        <p style="font-size: 0.85rem; color: #555; margin-top: 5px;">Cão com fivela inteligente avistado perto do depósito. Tutor notificado!</p>
-      </div>
-    </div>
-  </div>
+        // Configuração da Nuvem Firebase do Projeto
+        const firebaseConfig = {
+            databaseURL: "https://SEU-PROJETO-FIREBASE-DEFAULT-RTDB.firebaseio.com/"
+        };
 
-  <!-- CARROSSEL ROTATIVO DE PATROCINADORES NO RODAPÉ -->
-  <div class="sponsor-carousel-container">
-    <span class="sponsor-title">⭐ Apoiadores:</span>
-    <a id="sponsor-link" class="sponsor-slide" href="https://wa.me/5522999999999" target="_blank">🛒 Depósito de Ração Duas Pedras — Ganhe sua Fivela Aqui!</a>
-  </div>
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-  <!-- BARRA DE NAV TABS -->
-  <nav class="nav-tabs">
-    <button class="tab-btn active" id="btn-tab-mural" onclick="showTab('tab-mural')">📢 Mural</button>
-    <button class="tab-btn" id="btn-tab-cadastrar-pet" onclick="showTab('tab-cadastrar-pet')">🐾 Ativar Pet</button>
-  </nav>
+        // Pega o ID único da URL (ex: ?id=abc123xyz)
+        const urlParams = new URLSearchParams(window.location.search);
+        let tagId = urlParams.get('id');
 
-  <script>
-    let fotoBase64 = "";
-
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.remove('hidden');
-      const btn = document.getElementById('btn-' + tabId);
-      if(btn) btn.classList.add('active');
-    }
-
-    function carregarFoto(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          fotoBase64 = e.target.result;
-          const preview = document.getElementById('pet-foto-preview');
-          preview.src = fotoBase64;
-          preview.classList.remove('hidden');
+        // Se abrir sem ID de teste, gera um ID simulado para testes rápidos
+        if (!tagId) {
+            tagId = "tag_teste_thor_001";
         }
-        reader.readAsDataURL(file);
-      }
-    }
 
-    const patrocinadores = [
-      { nome: "🛒 Depósito de Ração Duas Pedras — Fivelas de Cortesia", link: "https://wa.me/5522999999999" },
-      { nome: "🩺 Clínica Vet Friburgo — Vacinas e Consultas", link: "https://wa.me/5522988888888" },
-      { nome: "💊 Farmácia Pet Serra — 10% de Desconto", link: "https://wa.me/5522977777777" }
-    ];
-    let sponsorIndex = 0;
+        async function initApp() {
+            const tagRef = ref(db, 'pets/' + tagId);
+            const snapshot = await get(tagRef);
 
-    setInterval(() => {
-      sponsorIndex = (sponsorIndex + 1) % patrocinadores.length;
-      const el = document.getElementById('sponsor-link');
-      el.style.opacity = 0;
-      setTimeout(() => {
-        el.innerText = patrocinadores[sponsorIndex].nome;
-        el.href = patrocinadores[sponsorIndex].link;
-        el.style.opacity = 1;
-      }, 300);
-    }, 4000);
+            document.getElementById('loading').style.display = 'none';
 
-    function salvarPet() {
-      const pin = document.getElementById('pet-pin').value;
-      const nome = document.getElementById('pet-nome').value;
-      const zap = document.getElementById('pet-whatsapp').value;
+            if (snapshot.exists()) {
+                // A fivela JÁ EXISTE e tem pet cadastrado -> Mostra a tela de perfil/resgate
+                const data = snapshot.val();
+                document.getElementById('display-name').innerText = data.petName;
+                if(data.photoUrl) {
+                    document.getElementById('display-photo').src = data.photoUrl;
+                }
+                document.getElementById('profile-screen').classList.remove('hidden');
+            } else {
+                // A fivela É NOVA (Primeiro Uso) -> Mostra a tela de cadastro
+                document.getElementById('register-screen').classList.remove('hidden');
+            }
+        }
 
-      if(!pin || !nome || !zap) {
-        alert("Por favor, preencha o PIN, o nome do pet e o WhatsApp.");
-        return;
-      }
+        // Salvar novo cadastro no primeiro uso
+        document.getElementById('form-register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const petName = document.getElementById('pet-name').value;
+            const ownerName = document.getElementById('owner-name').value;
+            const ownerPhone = document.getElementById('owner-phone').value;
+            const petNotes = document.getElementById('pet-notes').value;
 
-      alert("Fivela vinculada com sucesso! O perfil do pet com a foto já está ativo no sistema.");
-    }
-  </script>
+            try {
+                await set(ref(db, 'pets/' + tagId), {
+                    petName,
+                    ownerName,
+                    ownerPhone,
+                    petNotes,
+                    createdAt: Date.now()
+                });
+                alert('PetCode ativado com sucesso para o ' + petName + '!');
+                location.reload();
+            } catch (error) {
+                alert('Erro ao salvar: ' + error.message);
+            }
+        });
+
+        // Enviar mensagem segura sem expor o número do tutor diretamente
+        window.sendSecureMessage = async function() {
+            const mensagem = document.getElementById('msg-finder').value;
+            if(!mensagem) {
+                alert('Por favor, escreva uma mensagem antes de enviar.');
+                return;
+            }
+            
+            const tagRef = ref(db, 'pets/' + tagId);
+            const snapshot = await get(tagRef);
+            if(snapshot.exists()) {
+                const data = snapshot.val();
+                // Abre o WhatsApp para o tutor de forma segura ou dispara o alerta
+                const urlWa = `https://wa.me/55${data.ownerPhone.replace(/\D/g,'')}?text=Olá%20${encodeURIComponent(data.ownerName)},%20encontrei%20o%20${encodeURIComponent(data.petName)}!%20Mensagem:%20${encodeURIComponent(mensagem)}`;
+                window.location.href = urlWa;
+            }
+        }
+
+        initApp();
+    </script>
 </body>
 </html>
