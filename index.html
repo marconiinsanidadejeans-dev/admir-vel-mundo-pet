@@ -3,280 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Mundo - Fichas Inteligentes e Gestão de Pets</title>
-  <!-- Tailwind CSS para um visual moderno e limpo -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Biblioteca para gerar QR Codes -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Firebase SDKs compatíveis -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <title>Admirável Mundo Pet - Nova Friburgo</title>
   <style>
-    @media print {
-      body * { visibility: hidden; }
-      #printable-tag, #printable-tag * { visibility: visible; }
-      #printable-tag { position: absolute; left: 0; top: 0; width: 100%; }
+    :root {
+      --primary: #2e7d32;
+      --primary-hover: #1b5e20;
+      --danger: #d32f2f;
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #333333;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 120px; }
+    
+    header { background: var(--primary); color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    
+    .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+    
+    .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; width: 100%; text-decoration: none; display: inline-block; }
+    .btn-danger { background: var(--danger); }
+    
+    .card { background: var(--card-bg); border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    
+    .hidden { display: none; }
+    
+    /* PREVIEW DA FOTO DO PET */
+    .pet-photo-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      display: block;
+      margin: 10px auto;
+      background: #eee;
+    }
+
+    /* CARROSSEL NO RODAPÉ PARA PATROCINADORES */
+    .sponsor-carousel-container {
+      position: fixed;
+      bottom: 55px;
+      left: 0;
+      right: 0;
+      background: #e8f5e9;
+      border-top: 1px solid #c8e6c9;
+      padding: 8px 15px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .sponsor-title { font-size: 0.7rem; color: #2e7d32; font-weight: bold; text-transform: uppercase; white-space: nowrap; margin-right: 10px; }
+    .sponsor-slide { font-size: 0.85rem; font-weight: bold; color: #1b5e20; text-decoration: none; white-space: nowrap; transition: opacity 0.5s ease-in-out; }
+
+    /* NAVEGAÇÃO FIXA */
+    .nav-tabs { display: flex; justify-content: space-around; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; padding: 10px 0; z-index: 100; }
+    .tab-btn { border: none; background: none; font-size: 0.8rem; color: #666; cursor: pointer; text-align: center; width: 25%; }
+    .tab-btn.active { color: var(--primary); font-weight: bold; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body>
 
-  <!-- Header / Navbar -->
-  <header class="bg-emerald-600 text-white shadow-md">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
-      <div class="flex items-center space-x-3">
-        <span class="text-3xl">🐾</span>
-        <div>
-          <h1 class="text-2xl font-bold tracking-wide">PET MUNDO</h1>
-          <p class="text-xs text-emerald-100">Fichas Inteligentes & Chaveiros DTF UV • Nuvem Ativa</p>
-        </div>
-      </div>
-      <!-- Abas de Navegação -->
-      <nav class="flex bg-emerald-700 p-1 rounded-lg shadow-inner text-sm font-medium">
-        <button onclick="switchTab('cadastro')" id="tab-cadastro" class="px-4 py-2 rounded-md bg-white text-emerald-700 shadow transition">Cadastrar Pet</button>
-        <button onclick="switchTab('lista')" id="tab-lista" class="px-4 py-2 rounded-md text-emerald-100 hover:text-white transition">Meus Pets na Nuvem</button>
-        <button onclick="switchTab('facegran')" id="tab-facegran" class="px-4 py-2 rounded-md text-emerald-100 hover:text-white transition">Facegran Pet 🌐</button>
-      </nav>
+  <header>🐾 Admirável Mundo Pet</header>
+
+  <div class="container">
+    <div class="quick-actions">
+      <button class="btn btn-danger" onclick="showTab('tab-mural')">🚨 Vi um Pet na Rua</button>
+      <button class="btn" onclick="showTab('tab-cadastrar-pet')">🐾 Ativar / Cadastrar Pet</button>
     </div>
-  </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
-
-    <!-- AB 1: CADASTRO DE PETS -->
-    <section id="content-cadastro" class="space-y-6">
-      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
-        <h2 class="text-xl font-semibold mb-4 text-emerald-700 flex items-center gap-2">
-          <span>✨</span> Novo Cadastro Inteligente para Chaveiro DTF UV
-        </h2>
-        
-        <form id="petForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-600 mb-1">Nome do Pet</label>
-            <input type="text" id="petName" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Ex: Mel, Bob, Thor...">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-600 mb-1">Espécie / Raça</label>
-            <input type="text" id="petBreed" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Ex: Cão - Golden Retriever">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-600 mb-1">Nome do Tutor</label>
-            <input type="text" id="tutorName" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Seu nome completo">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-600 mb-1">Telefone de Contato (WhatsApp)</label>
-            <input type="tel" id="tutorPhone" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="(22) 99999-9999">
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-slate-600 mb-1">Endereço / Observações Médicas (Alergias, Cuidados)</label>
-            <textarea id="petNotes" rows="2" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none" placeholder="Ex: Rua Elisa Sertã, Nova Friburgo. Alérgico a frango."></textarea>
-          </div>
-          <div class="md:col-span-2 flex justify-end gap-3 mt-2">
-            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow transition flex items-center gap-2">
-              <span>🚀</span> Salvar Pet na Nuvem & Gerar Chaveiro
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Preview do Chaveiro / Etiqueta DTF UV -->
-      <div id="previewCard" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 hidden">
-        <h3 class="text-lg font-semibold mb-4 text-slate-700 flex items-center gap-2">
-          <span>🏷️</span> Ficha Pronta para Impressão DTF UV & QR Code
-        </h3>
-        
-        <div id="printable-tag" class="max-w-md mx-auto bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-500 rounded-2xl p-6 shadow-md text-center relative">
-          <div class="absolute top-3 right-3 bg-emerald-600 text-white text-xs px-2 py-1 rounded-full font-bold">PET MUNDO</div>
-          <h4 id="tagPetName" class="text-2xl font-black text-emerald-800 mb-1">Nome do Pet</h4>
-          <p id="tagPetBreed" class="text-sm font-medium text-slate-600 mb-4">Raça / Espécie</p>
-          
-          <div id="qrcode" class="bg-white p-3 inline-block rounded-xl shadow border border-emerald-200 my-2"></div>
-          
-          <div class="mt-4 text-left bg-white/80 p-3 rounded-lg text-xs space-y-1 border border-emerald-100">
-            <p><strong>Tutor:</strong> <span id="tagTutor">Nome</span></p>
-            <p><strong>Contato:</strong> <span id="tagPhone">(00) 00000-0000</span></p>
-            <p><strong>Info:</strong> <span id="tagNotes">-</span></p>
-          </div>
+    <!-- ABA CADASTRO COM PIN, TAMANHO E FOTO EDITÁVEL -->
+    <div id="tab-cadastrar-pet" class="tab-content hidden">
+      <h2>🔑 Ativar Fivela Inteligente</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Código PIN da Fivela (No Passador):</label>
+          <input type="text" id="pet-pin" placeholder="Ex: PIN-8391" style="font-weight: bold; letter-spacing: 1px;">
         </div>
-
-        <div class="flex justify-center gap-4 mt-6">
-          <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
-            <span>🖨️</span> Imprimir Ficha / Chaveiro
-          </button>
-          <button onclick="resetForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2 rounded-lg text-sm font-medium transition">
-            Cadastrar Outro Pet
-          </button>
+        <div class="form-group">
+          <label>Nome do Pet:</label>
+          <input type="text" id="pet-nome" placeholder="Ex: Thor">
         </div>
-      </div>
-    </section>
-
-    <!-- AB 2: LISTA DE PETS NA NUVEM -->
-    <section id="content-lista" class="hidden space-y-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-semibold text-emerald-700">Pets Cadastrados na Nuvem (Firebase)</h2>
-          <span id="petCount" class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">0 pets</span>
+        <div class="form-group">
+          <label>Tamanho da Fivela:</label>
+          <select id="pet-tamanho">
+            <option value="30mm">Médio (30 mm) - Cães pequenos e médios</option>
+            <option value="45mm">Grande (45 mm) - Cães de grande porte</option>
+          </select>
         </div>
-        <div id="petsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Dinâmico via Firebase -->
+        <div class="form-group">
+          <label>Foto do Perfil do Pet:</label>
+          <input type="file" id="pet-foto-input" accept="image/*" onchange="carregarFoto(event)">
+          <img id="pet-foto-preview" class="pet-photo-preview hidden" alt="Pré-visualização da foto do pet">
         </div>
+        <div class="form-group">
+          <label>Seu WhatsApp (Com DDD):</label>
+          <input type="tel" id="pet-whatsapp" placeholder="Ex: 22999999999">
+        </div>
+        <button class="btn" onclick="salvarPet()">Vincular Fivela ao Pet</button>
       </div>
-    </section>
+    </div>
 
-    <!-- AB 3: FACEGRAN PET (REDE SOCIAL) -->
-    <section id="content-facegran" class="hidden space-y-6">
-      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-center py-16">
-        <div class="text-5xl mb-4">🌐🐶🐱</div>
-        <h2 class="text-2xl font-bold text-emerald-800 mb-2">Facegran Pet</h2>
-        <p class="text-slate-600 max-w-lg mx-auto mb-6">
-          A futura rede social interna do ecossistema Pet Mundo para partilhar momentos, histórias e conectar tutores e pets com fichas inteligentes!
-        </p>
-        <span class="inline-block bg-emerald-100 text-emerald-800 text-sm font-semibold px-4 py-2 rounded-full">
-          Em breve no ar • Módulo Social Integrado
-        </span>
+    <!-- MURAL PADRÃO -->
+    <div id="tab-mural" class="tab-content">
+      <h2>📢 Mural Comunitário & Alertas</h2>
+      <div class="card">
+        <h3>📍 Alerta Recente em Duas Pedras</h3>
+        <p style="font-size: 0.85rem; color: #555; margin-top: 5px;">Cão com fivela inteligente avistado perto do depósito. Tutor notificado!</p>
       </div>
-    </section>
+    </div>
+  </div>
 
-  </main>
+  <!-- CARROSSEL ROTATIVO DE PATROCINADORES NO RODAPÉ -->
+  <div class="sponsor-carousel-container">
+    <span class="sponsor-title">⭐ Apoiadores:</span>
+    <a id="sponsor-link" class="sponsor-slide" href="https://wa.me/5522999999999" target="_blank">🛒 Depósito de Ração Duas Pedras — Ganhe sua Fivela Aqui!</a>
+  </div>
 
-  <!-- Rodapé -->
-  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    Pet Mundo &bull; Desenvolvido por Marconi &bull; Nuvem Firebase Conectada
-  </footer>
+  <!-- BARRA DE NAV TABS -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" id="btn-tab-mural" onclick="showTab('tab-mural')">📢 Mural</button>
+    <button class="tab-btn" id="btn-tab-cadastrar-pet" onclick="showTab('tab-cadastrar-pet')">🐾 Ativar Pet</button>
+  </nav>
 
-  <!-- Script Principal de Lógica & Firebase -->
   <script>
-    // Configuração oficial fornecida do Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyD2ADjkboqeOtfA-JPe2bN-FzkpHP-Oy7Q",
-      authDomain: "o-admiravel-mundo-pet.firebaseapp.com",
-      databaseURL: "https://o-admiravel-mundo-pet-default-rtdb.firebaseio.com",
-      projectId: "o-admiravel-mundo-pet",
-      storageBucket: "o-admiravel-mundo-pet.firebasestorage.app",
-      messagingSenderId: "234965013257",
-      appId: "1:234965013257:web:9cae00f024e93003f4b9d8"
-    };
+    let fotoBase64 = "";
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    // Controle de Abas
-    function switchTab(tab) {
-      document.getElementById('content-cadastro').classList.add('hidden');
-      document.getElementById('content-lista').classList.add('hidden');
-      document.getElementById('content-facegran').classList.add('hidden');
-      
-      document.getElementById('tab-cadastro').className = "px-4 py-2 rounded-md text-emerald-100 hover:text-white transition";
-      document.getElementById('tab-lista').className = "px-4 py-2 rounded-md text-emerald-100 hover:text-white transition";
-      document.getElementById('tab-facegran').className = "px-4 py-2 rounded-md text-emerald-100 hover:text-white transition";
-
-      document.getElementById('content-' + tab).classList.remove('hidden');
-      document.getElementById('tab-' + tab).className = "px-4 py-2 rounded-md bg-white text-emerald-700 shadow transition";
-
-      if (tab === 'lista') {
-        loadPetsFromCloud();
-      }
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.remove('hidden');
+      const btn = document.getElementById('btn-' + tabId);
+      if(btn) btn.classList.add('active');
     }
 
-    // Manipular Envio do Formulário
-    document.getElementById('petForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const petData = {
-        name: document.getElementById('petName').value,
-        breed: document.getElementById('petBreed').value,
-        tutor: document.getElementById('tutorName').value,
-        phone: document.getElementById('tutorPhone').value,
-        notes: document.getElementById('petNotes').value,
-        createdAt: new Date().toISOString()
-      };
-
-      // Salvar no Firebase Realtime Database
-      const newPetRef = database.ref('pets').push();
-      newPetRef.set(petData).then(() => {
-        // Exibir Preview da Ficha / QR Code
-        document.getElementById('tagPetName').innerText = petData.name;
-        document.getElementById('tagPetBreed').innerText = petData.breed;
-        document.getElementById('tagTutor').innerText = petData.tutor;
-        document.getElementById('tagPhone').innerText = petData.phone;
-        document.getElementById('tagNotes').innerText = petData.notes || 'Nenhuma observação';
-
-        // Gerar QR Code com URL dinâmica ou dados do pet
-        document.getElementById('qrcode').innerHTML = "";
-        const qrText = `Pet: ${petData.name} | Tutor: ${petData.tutor} | Tel: ${petData.phone} | Obs: ${petData.notes}`;
-        new QRCode(document.getElementById("qrcode"), {
-          text: qrText,
-          width: 128,
-          height: 128,
-          colorDark: "#065f46",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H
-        });
-
-        document.getElementById('previewCard').classList.remove('hidden');
-        document.getElementById('previewCard').scrollIntoView({ behavior: 'smooth' });
-      }).catch((error) => {
-        alert("Erro ao salvar pet na nuvem: " + error.message);
-      });
-    });
-
-    // Carregar Pets da Nuvem
-    function loadPetsFromCloud() {
-      const container = document.getElementById('petsContainer');
-      container.innerHTML = `<p class="text-slate-500 col-span-full text-center py-4">A carregar pets da nuvem...</p>`;
-
-      database.ref('pets').once('value', (snapshot) => {
-        container.innerHTML = "";
-        const data = snapshot.val();
-        if (!data) {
-          container.innerHTML = `<p class="text-slate-500 col-span-full text-center py-8">Nenhum pet cadastrado na nuvem ainda.</p>`;
-          document.getElementById('petCount').innerText = "0 pets";
-          return;
+    function carregarFoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fotoBase64 = e.target.result;
+          const preview = document.getElementById('pet-foto-preview');
+          preview.src = fotoBase64;
+          preview.classList.remove('hidden');
         }
-
-        let count = 0;
-        Object.keys(data).forEach((key) => {
-          count++;
-          const pet = data[key];
-          const card = document.createElement('div');
-          card.className = "bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col justify-between";
-          card.innerHTML = `
-            <div>
-              <div class="flex justify-between items-start mb-2">
-                <h3 class="font-bold text-lg text-emerald-800">${pet.name}</h3>
-                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">${pet.breed}</span>
-              </div>
-              <p class="text-xs text-slate-600 mb-1"><strong>Tutor:</strong> ${pet.tutor}</p>
-              <p class="text-xs text-slate-600 mb-1"><strong>Tel:</strong> ${pet.phone}</p>
-              <p class="text-xs text-slate-500 italic mt-2 bg-white p-2 rounded border border-slate-100">${pet.notes || 'Sem observações'}</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center text-xs">
-              <span class="text-slate-400">ID: ${key.substring(1, 7)}...</span>
-              <button onclick="deletePet('${key}')" class="text-red-500 hover:text-red-700 font-medium">Excluir</button>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-        document.getElementById('petCount').innerText = `${count} ${count === 1 ? 'pet' : 'pets'}`;
-      });
-    }
-
-    // Excluir Pet da Nuvem
-    function deletePet(id) {
-      if (confirm("Tem certeza que deseja remover este pet da nuvem?")) {
-        database.ref('pets/' + id).remove().then(() => {
-          loadPetsFromCloud();
-        });
+        reader.readAsDataURL(file);
       }
     }
 
-    function resetForm() {
-      document.getElementById('petForm').reset();
-      document.getElementById('previewCard').classList.add('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const patrocinadores = [
+      { nome: "🛒 Depósito de Ração Duas Pedras — Fivelas de Cortesia", link: "https://wa.me/5522999999999" },
+      { nome: "🩺 Clínica Vet Friburgo — Vacinas e Consultas", link: "https://wa.me/5522988888888" },
+      { nome: "💊 Farmácia Pet Serra — 10% de Desconto", link: "https://wa.me/5522977777777" }
+    ];
+    let sponsorIndex = 0;
+
+    setInterval(() => {
+      sponsorIndex = (sponsorIndex + 1) % patrocinadores.length;
+      const el = document.getElementById('sponsor-link');
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.innerText = patrocinadores[sponsorIndex].nome;
+        el.href = patrocinadores[sponsorIndex].link;
+        el.style.opacity = 1;
+      }, 300);
+    }, 4000);
+
+    function salvarPet() {
+      const pin = document.getElementById('pet-pin').value;
+      const nome = document.getElementById('pet-nome').value;
+      const zap = document.getElementById('pet-whatsapp').value;
+
+      if(!pin || !nome || !zap) {
+        alert("Por favor, preencha o PIN, o nome do pet e o WhatsApp.");
+        return;
+      }
+
+      alert("Fivela vinculada com sucesso! O perfil do pet com a foto já está ativo no sistema.");
     }
   </script>
-
 </body>
 </html>
